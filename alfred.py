@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 
 
@@ -9,5 +10,20 @@ TOOLS = raw_input("""
 		3.C
 		4.python
 		""")
+
+def installation_checker(tool):
+	try:
+		if tool == 'java':
+			command = '%s -version' % (tool)
+			os.system(command)
+		else:   
+			command = '%s --version' % (tool)
+			os.system(command)
+	except Exception:
+		raise e
+
+if TOOLS == '1':
+	print installation_checker("R")    
+
 
 
