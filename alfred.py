@@ -1,18 +1,21 @@
 import os
 import subprocess
+import time
 from os.path import expanduser
 from termcolor import colored
 
 
 HOME_PATH = expanduser("~/")
 
-INSTALLATION_FOLDER = "PYTHON_INSTALLER"
+INSTALLATION_FOLDER = "ALFRED"
 
-INSTALLATION_FILE = "INSTALLATION_NOTES"
+INSTALLATION_DETAILS_FILE = "INSTALLATION_NOTES"
+
+JAVA_IDE = "eclipse"
 
 TOOLS = raw_input(
 """
-Please select a thing from the following to begin :
+Please select a thing from the following for setting up the environment:
 1.Java
 2.Android
 3.python
@@ -20,6 +23,7 @@ Please select a thing from the following to begin :
 """)
 
 def installation_checker(tool):
+    time.sleep(5)
     if tool == 'java':
         command = '%s -version' % (tool)
         command_executer = os.system(command)
@@ -29,23 +33,31 @@ def installation_checker(tool):
 
     if command_executer !=0:
         print colored("%s is not installed,let me install that for you master bruce" % (tool), 'blue')
-        installer(tool=tool) #installer to install the things.
+        installer(tool=tool) 
     else:
         print colored("%s is already installed master bruce" % (tool), 'blue') 
-
+    time.sleep(5)    
+    #ide checker
+    command = '%s --version' % (JAVA_IDE)
+    command_executer = os.system(command)
+    if command_executer !=0:
+        print colored("%s is not installed,let me install that for you master bruce" % (JAVA_IDE), 'blue')
+        installer(tool=JAVA_IDE)    
 
 def installer(tool=None):
     if tool == 'java':
         print colored("Installing java master bruce.....", "green")
+        time.sleep(3)
         command = 'sudo apt-get install default-jre'    
         os.system(command)
-        print "Installing eclipse master bruce....."
-        # command = 
+        
+    elif tool == 'eclipse':
+        print colored("Installing eclipse master bruce....", "green")
+        time.sleep(3)
+        command = 'sudo apt-get install eclipse'    
+        os.system(command)
 
-# def ide_installer(tool=None):
-#     if tool == 'java':
-#         print colored('CHECKING WHETHER ECLIPSE IS INSTALLED OR NOT, MASTER BRUCE', 'green')
-#         command = 
+
 
     
 if TOOLS == '1':
@@ -61,8 +73,8 @@ elif TOOLS == '4':
     print installation_checker("webdevelopment")
 
 
-def installation_notes_creator(tool, version):
-    file_opener = open('installer', 'wb')
+def installation_notes_creator(tool=None, version=None):
+    file_opener = open(INSTALLATION_DETAILS_FILE, 'wb')
     content = """
              Title : %s
              Version : %s
