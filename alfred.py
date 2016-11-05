@@ -60,11 +60,17 @@ def installer(tool=None):
         command = 'sudo apt-get install eclipse'    
         os.system(command)
 
-def path_checker(tool=None):
+def path_checker_and_setter(tool=None):
+    # if tool == 'java':
+    #     command = 'echo $JAVA_HOME'  
+    #     command_executer = subprocess.check_output(command, shell=True) 
+    #     if command_executer = '\n':
+    #         command =  
+    # return command_executer 
     if tool == 'java':
-        command = 'echo $JAVA_HOME'  
-        command_executer = subprocess.check_output(command, shell=True)  
-    return command_executer       
+        command = 'which java'
+        command_executer = subprocess.check_output(command, shell=True)
+    return command_executer          
 
 def installation_notes_creator(tool=None, directory=None, file=None):
     try:
