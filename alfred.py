@@ -21,44 +21,108 @@ Please select a thing from the following for setting up the environment:
 1.Java
 2.Android
 3.python
-4.webdevelopment
+4.Apache-tomcat
 """)
 
 def installation_checker(tool):
-    time.sleep(5)
     if tool == 'java':
+        time.sleep(2)
         command = '%s -version' % (tool)
         command_executer = os.system(command)
+        if command_executer !=0:
+            print colored("%s is not installed,let me install that for you master bruce" % (tool), 'blue')
+            installer(tool=tool) 
+        else:
+            print colored("%s is already installed master bruce" % (tool), 'blue') 
+        time.sleep(2)
+        #checking IDE
+        command = '%s --version' % (JAVA_IDE)
+        command_executer = os.system(command)
+        if command_executer !=0:
+            print colored("%s is not installed,let me install that for you master bruce" % (JAVA_IDE), 'blue')
+            installer(tool=JAVA_IDE) 
+
+        installation_notes_creator(tool=tool, directory=INSTALLATION_FOLDER, file=INSTALLATION_DETAILS_FILE)     
+        time.sleep(5)   
+    #for android    
+    elif tool == 'Android':
+        time.sleep(2)
+        installer(tool=tool)    
+
+    #for python
+    elif tool == 'python':
+        #checking pip
+        time.sleep(2)
+        print colored("Checking pip... master bruce", "green")
+        pip_command = "pip list"
+        pip_command_executer = os.system(pip_command)
+        if pip_command_executer != 0:
+            print colored("Pip is not installed, let me install that for you master bruce", 'blue')
+            installer(tool='pip')
+
+        #checking django
+        time.sleep(2)
+        print colored("Checking django .... master bruce", "green")
+        django_command = "%s -c 'import django; print(django.get_version())'" % (tool)
+        django_command_executer = os.system(django_command)
+        if django_command_executer !=0:
+            print colored("Django is not installed, let me install that for you master bruce", 'blue')
+            installer(tool='django')
+        else:
+            print colored("Django is already here master bruce.. you can check the installation notes for further details", 'green') 
+        installation_notes_creator(tool=tool, directory=INSTALLATION_FOLDER, file=INSTALLATION_DETAILS_FILE)   
+    #for tomcat 
+    elif tool == 'Apache-tomcat':
+        time.sleep(2)
+        installer(tool=tool)    
+    
     else:   
         command = '%s --version' % (tool)
         command_executer = os.system(command)
-
-    if command_executer !=0:
-        print colored("%s is not installed,let me install that for you master bruce" % (tool), 'blue')
-        installer(tool=tool) 
-    else:
-        print colored("%s is already installed master bruce" % (tool), 'blue') 
-    installation_notes_creator(tool=tool, directory=INSTALLATION_FOLDER, file=INSTALLATION_DETAILS_FILE)     
-    time.sleep(5)    
-    #ide checker
-    command = '%s --version' % (JAVA_IDE)
-    command_executer = os.system(command)
-    if command_executer !=0:
-        print colored("%s is not installed,let me install that for you master bruce" % (JAVA_IDE), 'blue')
-        installer(tool=JAVA_IDE)    
-       
+#Installer function
 def installer(tool=None):
     if tool == 'java':
         print colored("Installing java master bruce.....", "green")
         time.sleep(3)
         command = 'sudo apt-get install default-jre'    
         os.system(command)
-        
     elif tool == 'eclipse':
         print colored("Installing eclipse master bruce....", "green")
         time.sleep(3)
         command = 'sudo apt-get install eclipse'    
         os.system(command)
+    elif tool == 'Android':
+        print colored("Installing android studion master bruce....", "green")
+        time.sleep(3)
+        repository_command = 'sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make'
+        update_command = 'sudo apt-get update'
+        ubuntu_make_command = 'sudo apt-get install ubuntu-make'
+        studio_command = 'umake android'
+        os.system(repository_command)
+        os.system(update_command)
+        os.system(ubuntu_make_command)
+        os.system(studio_command)    
+    elif tool == 'Apache-tomcat':
+        print colored("Installing apache tomcat server master bruce...", "green")
+        time.sleep(3)
+        update_command = 'sudo apt-get update'
+        tomcat_command = 'sudo apt-get install tomcat7'
+        os.system(update_command)
+        os.system(tomcat_command)
+    elif tool == 'pip':
+        print colored("Installing pip master bruce.....", "green")
+        time.sleep(3)
+        update_command = 'sudo apt-get update'
+        pip_command = 'sudo apt-get -y install python-pip'
+        os.system(update_command)
+        os.system(pip_command)     
+    elif tool == 'django':
+        print colored("Installing django master bruce.....", "green")
+        time.sleep(3)
+        command = 'pip install django'
+        os.system(command) 
+
+
 
 def path_checker_and_setter(tool=None):
     # if tool == 'java':
@@ -68,9 +132,12 @@ def path_checker_and_setter(tool=None):
     #         command =  
     # return command_executer 
     if tool == 'java':
-        command = 'which java'
+        command = 'which %s' % (tool)
         command_executer = subprocess.check_output(command, shell=True)
-    return command_executer          
+    elif tool == 'python':
+        command = 'which %s' % (tool)
+        command_executer = subprocess.check_output(command, shell=True)
+    return command_executer            
 
 def installation_notes_creator(tool=None, directory=None, file=None):
     try:
@@ -83,7 +150,7 @@ def installation_notes_creator(tool=None, directory=None, file=None):
     except:
         pass
     #calling path checker function to get installed path    
-    path_checker_function = path_checker(tool=tool)   
+    path_checker_function = path_checker_and_setter(tool=tool)   
     file_opener = open(os.path.join(INSTALLATION_FOLDER_PATH, file), 'wb')
     content = """ 
     %s Details :
@@ -100,20 +167,18 @@ elif TOOLS == '2':
     print installation_checker("Android")
 
 elif TOOLS == '3':
-    print installation_checker("python")
+    print colored("Python is already here... master bruce", "blue")
+    print installation_checker("python") 
+    # path_checker_and_setter("python")
 
 elif TOOLS == '4':
-    print installation_checker("webdevelopment")
+   print installation_checker("Apache-tomcat") 
 
 
 
 
 
-#def installation_directory_checker(folder, home_path, installation_folder):
-#    if not os.path.exists(folder):
-#        director_creater = os.makedirs(os.path.join(HOME_PATH, INSTALLATION_FOLDER)
-    #else:
-    #    print "Installation notes will be in %s as %s" % (installation_folder, installation_file)
+
 
        
         
