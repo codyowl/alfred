@@ -25,6 +25,7 @@ Please select a thing from the following to begin setting up the environment mas
 2.Android
 3.python
 4.Apache-tomcat
+5.editors
 """% (USER_NAME)) 
 
 def installation_checker(tool):
@@ -77,11 +78,25 @@ def installation_checker(tool):
     #for tomcat 
     elif tool == 'Apache-tomcat':
         time.sleep(2)
-        installer(tool=tool)    
+        installer(tool=tool)
+
+    #for editors
+        #for sublime
+    elif tool == 'sublime':
+        time.sleep(2)
+        command = "subl --version"
+        command_executer = os.system(command)
+        if command_executer != 0:
+            print colored("Sublime is not installed, let me install that for your master %s", "blue") % (USER_NAME)
+            installer(tool=sublime)
+        else:
+            print colored("Sublime is already here master %s... ") % (USER_NAME)                
     
     else:   
         command = '%s --version' % (tool)
         command_executer = os.system(command)
+
+
 #Installer function
 def installer(tool=None):
     if tool == 'java':
@@ -124,6 +139,18 @@ def installer(tool=None):
         time.sleep(3)
         command = 'pip install django'
         os.system(command) 
+    
+    #editors:
+    elif tool == 'sublime':
+        print colored("Installing %s master %s .....", "green") % (USER_NAME)
+        time.sleep(3)
+        ppa_command = "sudo add-apt-repository ppa:webupd8team/sublime-text-3"
+        update_command = "sudo apt-get update"
+        install_command = "sudo apt-get install sublime-text-installer"
+        os.system(ppa_command)
+        os.system(update_command)
+        os.system(install_command)
+
 
 
 
@@ -177,6 +204,15 @@ elif TOOLS == '3':
 elif TOOLS == '4':
    print installation_checker("Apache-tomcat") 
 
+elif TOOLS == '5':
+   print colored("Please select an editor from the following editors.. master %s", "blue") % (USER_NAME)
+   editors = raw_input(
+"""
+1.sublime
+"""
+)
+   if editors == '1':
+       print installation_checker("sublime")
 
 
 
