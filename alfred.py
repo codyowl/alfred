@@ -88,7 +88,7 @@ def installation_checker(tool):
         command_executer = os.system(command)
         if command_executer != 0:
             print colored("Sublime is not installed, let me install that for your master %s", "blue") % (USER_NAME)
-            installer(tool=sublime)
+            installer(tool='sublime')
         else:
             print colored("Sublime is already here master %s... ") % (USER_NAME)                
     
